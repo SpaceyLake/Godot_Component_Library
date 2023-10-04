@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bdagy6rru1gli"]
 
 [ext_resource type="Script" path="res://Test/Pool/test.gd" id="1_mryte"]
-[ext_resource type="PackedScene" uid="uid://nviycn4qgben" path="res://Test/Pool/sound_pool.tscn" id="2_yaouj"]
+[ext_resource type="PackedScene" uid="uid://dsc05u85fotky" path="res://Test/Pool/sound_pool.tscn" id="2_yaouj"]
 
 [node name="Test" type="Node2D" node_paths=PackedStringArray("sound_pool")]
 script = ExtResource("1_mryte")
