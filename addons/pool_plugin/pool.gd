@@ -1,23 +1,35 @@
+@tool
 extends Node
 class_name Pool
 
-var type
-var is_native:bool
+@export var reference_resource:Node
+
 var instant_pool:Array
 var long_term_pool:Array
 var free_pool:Array
 var number_of_resources = 0
 
 func _ready():
+	reference_resource.pool_deactivate()
 	number_of_resources = 0
 	instant_pool = []
 	long_term_pool = []
 	free_pool = []
-	
-	if type is PackedScene:
-		is_native = false
+
+func _get_configuration_warnings():
+	var warnings:Array = []
+	if not reference_resource:
+		warnings.append("The pool is missing a reference node with the functions pool_is_active(), pool_activate(args:Array) and pool_deactivate(), please add it from the Inspector")
 	else:
-		is_native = true
+		if not reference_resource.has_method("pool_is_active"):
+			warnings.append("The reference node needs a pool_is_active() function to let the pool determine when to return resources.")
+			
+		if not reference_resource.has_method("pool_activate"):
+			warnings.append("The reference node needs a pool_activate(args:Array) function to let the pool know how to activate a requested resource.")
+			
+		if not reference_resource.has_method("pool_deactivate"):
+			warnings.append("The reference node needs a pool_deactivate() function to let the pool know how to deactivate a returned resource.")
+	return PackedStringArray(warnings)
 
 func return_resource(applicant:Node = null, resource_id:int = -1) -> bool:
 	if applicant == null:
@@ -26,8 +38,8 @@ func return_resource(applicant:Node = null, resource_id:int = -1) -> bool:
 		for i in instant_pool.size():
 			if instant_pool[i].get_instance_id() != resource_id:
 				continue
-			if is_running(instant_pool[i]):
-				deactivate(instant_pool[i])
+			if instant_pool[i].pool_is_active():
+				instant_pool[i].pool_deactivate()
 			free_pool.push_back(instant_pool.pop_at(i))
 			return true
 		return false
@@ -38,8 +50,8 @@ func return_resource(applicant:Node = null, resource_id:int = -1) -> bool:
 			if long_term_pool[i][0] == applicant:
 				resource_indexes.push_front(i)
 		for i in resource_indexes:
-			if is_running(long_term_pool[i][1]):
-				deactivate(long_term_pool[i][1])
+			if long_term_pool[i][1].pool_is_active():
+				long_term_pool[i][1].pool_deactivate()
 			free_pool.push_back(long_term_pool.pop_at(i)[1])
 		return true
 	
@@ -48,8 +60,8 @@ func return_resource(applicant:Node = null, resource_id:int = -1) -> bool:
 			continue
 		if long_term_pool[i][0] != applicant:
 			return false
-		if is_running(long_term_pool[i][1]):
-			deactivate(long_term_pool[i][1])
+		if long_term_pool[i][1].pool_is_active():
+			long_term_pool[i][1].pool_deactivate()
 		free_pool.push_back(long_term_pool.pop_at(i)[1])
 		return true
 	return false
@@ -65,11 +77,11 @@ func request_resource(applicant:Node = null, params:Array = []) -> int:
 			resource = free_pool.pop_front()
 	
 	if resource == null:
-		resource = type.instantiate() if not is_native else type.new()
+		resource = reference_resource.duplicate()
 		number_of_resources += 1
 		add_child(resource)
 	
-	activate(resource, params)
+	resource.pool_activate(params)
 	
 	if applicant == null:
 		instant_pool.push_back(resource)
@@ -78,19 +90,10 @@ func request_resource(applicant:Node = null, params:Array = []) -> int:
 		long_term_pool.push_back([applicant, resource])
 		return resource.get_instance_id()
 
-func activate(_activating_resource:Node, _params:Array) -> void:
-	pass
-
-func deactivate(_deactivating_resource:Node) -> void:
-	pass
-
-func is_running(_running_resource:Node) -> bool:
-	return false
-
 func free_used_resources() -> void:
 	var resource_indexes:Array = []
 	for i in instant_pool.size():
-		if not is_running(instant_pool[i]):
+		if not instant_pool[i].pool_is_active():
 			resource_indexes.push_front(i)
 	for i in resource_indexes:
 		free_pool.append(instant_pool.pop_at(i))

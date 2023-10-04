@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://nviycn4qgben"]
+[gd_scene load_steps=3 format=3 uid="uid://dsc05u85fotky"]
 
-[ext_resource type="Script" path="res://Test/Pool/sound_pool.gd" id="1_buf3o"]
+[ext_resource type="Script" path="res://addons/pool_plugin/pool.gd" id="1_ariho"]
+[ext_resource type="Script" path="res://Test/Pool/pool_resource.gd" id="2_p2l2q"]
 
-[node name="Sound Pool" type="Node"]
-script = ExtResource("1_buf3o")
+[node name="Sound Pool" type="Node" node_paths=PackedStringArray("reference_resource")]
+script = ExtResource("1_ariho")
+reference_resource = NodePath("AudioStreamPlayer")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+script = ExtResource("2_p2l2q")

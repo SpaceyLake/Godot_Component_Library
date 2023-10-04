@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var sound_pool:SoundPool
+@export var sound_pool:Pool
 
 var music:AudioStream = load("res://Resources/Music/song.wav")
 var sound:AudioStream = load("res://Resources/Sound/explosion_big.wav")
