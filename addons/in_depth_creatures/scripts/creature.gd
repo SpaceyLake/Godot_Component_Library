@@ -3,13 +3,11 @@ class_name  Creature
 
 signal dead
 
-var body_parts: Array
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+@export var creature_name: String
+@export var creature_health: float
+@export var body_parts: Array
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func add_body_part(body_part:BodyPart):
+	body_parts.append(body_part)
+

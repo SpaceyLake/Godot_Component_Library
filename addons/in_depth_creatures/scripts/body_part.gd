@@ -1,8 +1,9 @@
 extends Node
 class_name BodyPart
 
-signal hurt
 signal destroyed
+signal dead
+signal suffocating
 
 enum Type {
 	APERTURE, 		# Marks the body part as an opening in the body.
@@ -17,6 +18,7 @@ enum Type {
 	HEAR,			# Body part is used to hear.
 	INTERNAL,		# Marks the body part as being inside the body.
 	JOINT,			# Body part is a joint.
+	LUNG,			# Body part is a lung.
 	LIMB,			# Body part is a limb.
 	MOUTH,			# Body part is a mouth.
 	NERVOUS,		# Body part is the hub of nervous function.
@@ -28,15 +30,33 @@ enum Type {
 }
 
 @export var part_name: String
-@export var part_type: Type
+@export var part_types: Array
+@export var part_value: float
+@export var part_health: float
 @export var parent: BodyPart
 @export var children: Array
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func _init(p_name:String, p_types:Array, p_health:float = 100.0, p_value:float = 0.0, p_parent: BodyPart = null, p_children: Array = []):
+	part_name = p_name
+	part_types = p_types
+	part_value = p_value
+	part_health = p_health
+	parent = p_parent
+	children = p_children
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func hit():
 	pass
+
+func add_type(type:Type):
+	if part_types.find(type) == -1:
+		part_types.append(type)
+
+func remove_type(type:Type):
+	var index = part_types.find(type)
+	if index != -1:
+		part_types.remove_at(index)
+
+func is_type(type:Type) -> bool:
+	if part_types.find(type) != -1:
+		return true
+	return false
