@@ -1,5 +1,5 @@
 extends Node
-class_name StenMultiplayer
+class_name StenHost
 
 # These signals can be connected to by a UI lobby scene or the game scene.
 signal player_connected(peer_id, player_info)
@@ -61,7 +61,7 @@ func _on_player_connected(id):
 	_register_player.rpc_id(id, player_info)
 
 
-@rpc("any_peer", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func _register_player(new_player_info):
 	var new_player_id = multiplayer.get_remote_sender_id()
 	players[new_player_id] = new_player_info
@@ -86,3 +86,5 @@ func _on_connected_fail():
 func _on_server_disconnected():
 	multiplayer.multiplayer_peer = null
 	server_disconnected.emit()
+
+
