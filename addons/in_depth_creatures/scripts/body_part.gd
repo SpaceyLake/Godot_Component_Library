@@ -3,7 +3,6 @@ class_name BodyPart
 
 signal destroyed
 signal dead
-signal suffocating
 
 enum Type {
 	APERTURE, 		# Marks the body part as an opening in the body.
@@ -30,15 +29,15 @@ enum Type {
 }
 
 @export var part_name: String
-@export var part_types: Array
+@export var part_type: Type
 @export var part_value: float
 @export var part_health: float
 @export var parent: BodyPart
 @export var children: Array
 
-func _init(p_name:String, p_types:Array, p_health:float = 100.0, p_value:float = 0.0, p_parent: BodyPart = null, p_children: Array = []):
+func _init(p_name:String, p_types:Type, p_health:float = 100.0, p_value:float = 0.0, p_parent: BodyPart = null, p_children: Array = []):
 	part_name = p_name
-	part_types = p_types
+	part_type = p_types
 	part_value = p_value
 	part_health = p_health
 	parent = p_parent
@@ -47,16 +46,3 @@ func _init(p_name:String, p_types:Array, p_health:float = 100.0, p_value:float =
 func hit():
 	pass
 
-func add_type(type:Type):
-	if part_types.find(type) == -1:
-		part_types.append(type)
-
-func remove_type(type:Type):
-	var index = part_types.find(type)
-	if index != -1:
-		part_types.remove_at(index)
-
-func is_type(type:Type) -> bool:
-	if part_types.find(type) != -1:
-		return true
-	return false
