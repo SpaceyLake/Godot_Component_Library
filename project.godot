@@ -16,4 +16,4 @@ config/icon="res://icon.svg"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/sten_finite_state_machine/plugin.cfg")
+enabled=PackedStringArray("res://addons/sten_finite_state_machine/plugin.cfg", "res://addons/wave_function_collapse/plugin.cfg")
