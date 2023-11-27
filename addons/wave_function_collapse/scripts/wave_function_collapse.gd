@@ -12,6 +12,8 @@ var grid_map:Array = []
 var search:Array = []
 
 @export var rules:Dictionary = {}
+@export var weights:Dictionary = {}
+
 var directions = [
 	Vector3i( 1,0,0),
 	Vector3i(-1,0,0),
@@ -53,6 +55,18 @@ func add_rules(tile:Vector2i, dirs:Array, can_neighbor:Array):
 			for item in can_neighbor:
 				add_rules(item, [Vector3i(dir.x*-1,dir.y*-1,dir.z*-1)], [tile])
 
+func remove_rules(tile:Vector2i, dirs:Array, cant_neighbor:Array):
+	if typeof(rules.get(tile, -1)) == typeof(-1):
+		rules[tile] = {}
+	for dir in dirs:
+		if typeof(rules[tile].get(dir, -1)) != typeof(-1):
+			for item in cant_neighbor:
+				if item in rules[tile][dir]:
+					rules[tile][dir].remove_at(rules[tile][dir].find(item))
+					remove_rules(item,[Vector3i(dir.x*-1,dir.y*-1,dir.z*-1)],[tile])
+		else:
+			rules[tile][dir] = []
+
 func create_grid_map():
 	var x_offset = floori(grid_size.x / 2.0)
 	var y_offset = floori(grid_size.y / 2.0)
@@ -74,6 +88,7 @@ func create_grid_map():
 
 func set_tile(tile:Vector2i, pos:Vector3i):
 	grid_map[pos.x][pos.y][pos.z].tile = tile
+	grid_map[pos.x][pos.y][pos.z].done = true
 	update_neighbors(tile, pos)
 
 func step():
@@ -100,7 +115,7 @@ func generate():
 	
 	set_tile(Vector2i(rng.randi() % number_of_tiles.x, rng.randi() % number_of_tiles.y), Vector3i(x_start, y_start, z_start))
 	
-	for i in grid_size.x * grid_size.y -1:
+	while search.size() > 0:
 		step()
 	
 	update_tilemap()

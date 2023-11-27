@@ -16,6 +16,7 @@ layer_0/tile_data = PackedInt32Array(-65536, 2, 0, -1, 2, 0, 65535, 2, 0, 0, 2, 
 
 [node name="WaveFunctionCollapse" type="Node" parent="." node_paths=PackedStringArray("tilemap")]
 script = ExtResource("1_c8j7l")
+grid_size = Vector3i(64, 64, 1)
 tilemap = NodePath("../TileMap")
 atlas_id = 2
-number_of_tiles = Vector2i(4, 3)
+number_of_tiles = Vector2i(2, 4)
