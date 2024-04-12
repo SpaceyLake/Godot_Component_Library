@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwlo48kv5bgmh"]
+
+[ext_resource type="PackedScene" uid="uid://6keuxqiiy4ri" path="res://Test/Drag/drag_object.tscn" id="1_0qjvl"]
+[ext_resource type="Script" path="res://addons/drag_plugin/drag.gd" id="2_5jsr0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yuvqe"]
+size = Vector2(128, 128)
+
+[node name="test" type="Node2D"]
+
+[node name="Drag Object" parent="." instance=ExtResource("1_0qjvl")]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(452, 347)
+
+[node name="Drag" type="Area2D" parent="Drag Object"]
+script = ExtResource("2_5jsr0")
+select_priority = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Drag Object/Drag"]
+shape = SubResource("RectangleShape2D_yuvqe")
+
+[node name="Drag Object2" parent="." instance=ExtResource("1_0qjvl")]
+modulate = Color(0, 1, 0, 1)
+position = Vector2(135, 452)
+
+[node name="Drag" type="Area2D" parent="Drag Object2"]
+script = ExtResource("2_5jsr0")
+select_priority = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Drag Object2/Drag"]
+shape = SubResource("RectangleShape2D_yuvqe")
+
+[node name="Drag Object3" parent="." instance=ExtResource("1_0qjvl")]
+modulate = Color(0, 0, 1, 1)
+position = Vector2(266, 159)
+
+[node name="Drag" type="Area2D" parent="Drag Object3"]
+script = ExtResource("2_5jsr0")
+select_priority = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Drag Object3/Drag"]
+shape = SubResource("RectangleShape2D_yuvqe")
+
+[node name="Drag Object4" parent="." instance=ExtResource("1_0qjvl")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(893, 175)
+
+[node name="Drag" type="Area2D" parent="Drag Object4"]
+script = ExtResource("2_5jsr0")
+select_priority = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Drag Object4/Drag"]
+shape = SubResource("RectangleShape2D_yuvqe")
+
+[connection signal="drag" from="Drag Object/Drag" to="Drag Object" method="_on_drag_drag"]
+[connection signal="drop" from="Drag Object/Drag" to="Drag Object" method="_on_drag_drop"]
+[connection signal="pick_up" from="Drag Object/Drag" to="Drag Object" method="_on_drag_pick_up"]
+[connection signal="drag" from="Drag Object2/Drag" to="Drag Object2" method="_on_drag_drag"]
+[connection signal="drop" from="Drag Object2/Drag" to="Drag Object2" method="_on_drag_drop"]
+[connection signal="pick_up" from="Drag Object2/Drag" to="Drag Object2" method="_on_drag_pick_up"]
+[connection signal="drag" from="Drag Object3/Drag" to="Drag Object3" method="_on_drag_drag"]
+[connection signal="drop" from="Drag Object3/Drag" to="Drag Object3" method="_on_drag_drop"]
+[connection signal="pick_up" from="Drag Object3/Drag" to="Drag Object3" method="_on_drag_pick_up"]
+[connection signal="drag" from="Drag Object4/Drag" to="Drag Object4" method="_on_drag_drag"]
+[connection signal="drop" from="Drag Object4/Drag" to="Drag Object4" method="_on_drag_drop"]
+[connection signal="pick_up" from="Drag Object4/Drag" to="Drag Object4" method="_on_drag_pick_up"]
